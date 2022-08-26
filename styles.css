@@ -1,4 +1,13 @@
+#form-container{
+    width: 100vw;
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
 #submit{
     color: rgb(233, 231, 227);
-    background-color: greenyellow;
+    background-color: rgb(32, 51, 139);
 }

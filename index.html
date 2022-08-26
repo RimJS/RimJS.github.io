@@ -7,16 +7,19 @@
     <title>Document</title>
 </head>
 <body>
-    <form id="myform">
-        <label for="usern">Username </label><br> 
-        <input type="text" name="usern" id="usern" autocomplete="off"><br>
-        
-        <label for="passw">Password</label><br>
-        <input type="password" name="passw" id="passw"><br>   
-        <input type="submit" value="Submit" id="submit">
-        <p id="blank"></p>
-        <p id="text"></p>
-     </form>
+    <div id="form-container">
+        <form id="myform">
+            <label for="usern">Username </label><br> 
+            <input type="text" name="usern" id="usern" autocomplete="off"><br>
+            
+            <label for="passw">Password</label><br>
+            <input type="password" name="passw" id="passw"><br>   
+            <input type="submit" value="Submit" id="submit">
+          
+         </form>
+    </div>
+
+     <p id="text"></p>
      <script>
         const mybutton= document.getElementById('submit');
         var myuser=document.getElementById('usern').value;
@@ -41,7 +44,8 @@
             for(var j=0; j<data.with.length; j++){
                 const object = (data.with[j].content);
                 for(let property in object){
-                    document.getElementById("text").innerHTML+=(`${property}: ${object[property]}` );
+                    document.getElementById("text").innerHTML+=(`${property}: ${object[property]}<br>` );
+
                 }
             }
                 
