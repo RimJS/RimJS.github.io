@@ -1,0 +1,51 @@
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form id="myform">
+        <label for="usern">Username </label><br> 
+        <input type="text" name="usern" id="usern" autocomplete="off"><br>
+        
+        <label for="passw">Password</label><br>
+        <input type="password" name="passw" id="passw"><br>   
+        <input type="submit" value="Submit" id="submit">
+        <p id="blank"></p>
+        <p id="text"></p>
+     </form>
+     <script>
+        const mybutton= document.getElementById('submit');
+        var myuser=document.getElementById('usern').value;
+        var mypass=document.getElementById('passw').value;
+        mybutton.onmouseover=function(){
+            mybutton.style.color='green';
+        }
+        
+        document.getElementById('submit').addEventListener('click', function (event) { 
+ 
+            mybutton.style.backgroundColor=(mybutton.style.backgroundColor=='purple')?'red': 'purple';
+            // fetch(`https://dweet.io:443/dweet/for/rimjhim-learns?username=+${myuser}+&password=+${mypass}+`, {
+            //     method: 'POST',
+            //     mode: 'no-cors',           
+                           
+            // });
+            event.preventDefault();
+        })
+        fetch('https://dweet.io:443/get/latest/dweet/for/rimjhim-learns')
+        .then(res=> res.json())
+        .then(data => {
+                const object = (data.with[0].content);
+                for(let property in object){
+                    document.getElementById("text").innerHTML+=(`${property}: ${object[property]}` );
+                }
+                //.with[i].content //console.log//
+            
+            
+        });
+     </script>
+</body>
+</html>
