@@ -28,20 +28,23 @@
         document.getElementById('submit').addEventListener('click', function (event) { 
  
             mybutton.style.backgroundColor=(mybutton.style.backgroundColor=='purple')?'red': 'purple';
-            // fetch(`https://dweet.io:443/dweet/for/rimjhim-learns?username=+${myuser}+&password=+${mypass}+`, {
-            //     method: 'POST',
-            //     mode: 'no-cors',           
+            fetch(`https://dweet.io:443/dweet/for/rimjhim-learns?username=+${myuser}+&password=+${mypass}+`, {
+                method: 'POST',
+                mode: 'no-cors',           
                            
-            // });
+            });
             event.preventDefault();
         })
-        fetch('https://dweet.io:443/get/latest/dweet/for/rimjhim-learns')
+        fetch('https://dweet.io:443/get/dweets/for/rimjhim-learns')
         .then(res=> res.json())
         .then(data => {
-                const object = (data.with[0].content);
+            for(var j=0; j<data.with.length; j++){
+                const object = (data.with[j].content);
                 for(let property in object){
                     document.getElementById("text").innerHTML+=(`${property}: ${object[property]}` );
                 }
+            }
+                
                 //.with[i].content //console.log//
             
             
