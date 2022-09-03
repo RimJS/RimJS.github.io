@@ -1,58 +1,115 @@
 <html lang="en">
+
 <head>
-    <link rel="stylesheet" href="styles.css">
+
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
 </head>
+
 <body>
-    <div id="form-container">
-        <form id="myform">
-            <label for="usern">Username </label><br> 
-            <input type="text" name="usern" id="usern" autocomplete="off"><br>
-            
-            <label for="passw">Password</label><br>
-            <input type="password" name="passw" id="passw"><br>   
-            <input type="submit" value="Submit" id="submit">
-          
-         </form>
+    <p id="p" >Select user who is chatting!</p><br>
+    <form id="chat_form">
+        <textarea name="myTextBox" cols="50" rows="5" style="border:6px outset #F7730E;" placeholder="Enter text here!" id="chat_box">
+               
+        </textarea>
+        <br />
+        <input type="submit" />
+    </form>
+    <div id="chat_history">
+
     </div>
-
-     <p id="text"></p>
-     <script>
-        const mybutton= document.getElementById('submit');
-        var myuser=document.getElementById('usern').value;
-        var mypass=document.getElementById('passw').value;
-        mybutton.onmouseover=function(){
-            mybutton.style.color='green';
-        }
-        
-        document.getElementById('submit').addEventListener('click', function (event) { 
- 
-            mybutton.style.backgroundColor=(mybutton.style.backgroundColor=='purple')?'red': 'purple';
-            fetch(`https://dweet.io:443/dweet/for/rimjhim-learns?username=+${myuser}+&password=+${mypass}+`, {
-                method: 'POST',
-                mode: 'no-cors',           
-                           
-            });
-            event.preventDefault();
-        })
-        fetch('https://dweet.io:443/get/dweets/for/rimjhim-learns')
-        .then(res=> res.json())
-        .then(data => {
-            for(var j=0; j<data.with.length; j++){
-                const object = (data.with[j].content);
-                for(let property in object){
-                    document.getElementById("text").innerHTML+=(`${property}: ${object[property]}<br>` );
-
-                }
-            }
-                
-                //.with[i].content //console.log//
-            
-            
-        });
-     </script>
 </body>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-analytics.js";
+    import { getDatabase, ref, set, child, push, update, get , onChildAdded} from "https://www.gstatic.com/firebasejs/9.9.3/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDweiKm5sa17rGP9yBYwvQJmlhIRHW77Hw",
+        authDomain: "windy-shoreline-291417.firebaseapp.com",
+        databaseUSRL: "https://windy-shoreline-291417-default-rtdb.firebaseio.com",
+        projectId: "windy-shoreline-291417",
+        storageBucket: "windy-shoreline-291417.appspot.com",
+        messagingSenderId: "897725010555",
+        appId: "1:897725010555:web:fdf32f26ca8564849108de",
+        measurementId: "G-T96Z083PLC"
+    };
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase();
+    const analytics = getAnalytics(app);
+    var paragraph = document.getElementById("p");
+    var form_chat = document.getElementById('chat_form');
+    var chat_div = document.getElementById('chat_history');
+    //var newUser= push(ref(database, '/usernames')).key;
+    //const updates={}; 
+    // updates['/usernames/'+newUser]='Puchku';
+    // var newUser= push(ref(database, '/usernames')).key;
+    // updates['/usernames/'+newUser]='Aza';
+    // var newUser= push(ref(database, '/usernames')).key;
+    // updates['/usernames/'+newUser]='Myna';
+    // var newUser= push(ref(database, '/usernames')).key;
+    // updates['/usernames/'+newUser]='Mo';
+    //update(ref(database), updates);
+
+    var usernames = [];
+    get(child(ref(database), '/usernames')).then((snapshot) => {
+        for (const [key, value] of Object.entries(snapshot.val())) {
+            usernames.push(value);
+            var rad_user = document.createElement('input');
+            var text = document.createTextNode(` ${value}`);
+            rad_user.type = 'radio';
+            rad_user.id = value;
+            rad_user.name = 'usern';
+            rad_user.innerHTML = value;
+            var label = document.createElement('label');
+            label.innerHTML = value;
+            //label.setAttribute('for', key);
+            form_chat.appendChild(rad_user);
+            form_chat.appendChild(label);
+
+        }
+    });
+
+    // get(child(ref(database), '/chats')).then((snapshot) => {
+    //     for (const [key, value] of Object.entries(snapshot.val())) {
+    //         var text = document.createElement('p');
+    //         text.innerHTML = value.user + '\n';
+    //         text.innerHTML += value.chat;
+    //         chat_div.appendChild(text);
+    //     }
+    // })
+
+    onChildAdded(ref(database, '/chats/'), (data) =>{        
+            var text = document.createElement('p');
+            text.innerHTML = `<b> ${data.val().user} : </b>`+ '\n';
+            text.innerHTML += data.val().chat;
+            chat_div.appendChild(text);
+        
+
+    })
+
+
+    form_chat.addEventListener('submit', function (e) {
+
+        e.preventDefault();
+
+        for (let user in usernames) {            
+            if (document.getElementById(usernames[user]).checked) {
+                var chat = document.getElementById('chat_box').value;
+                const postData = {
+                    user: usernames[user],
+                    chat: chat
+                }
+                const postKey = push(child(ref(database), '/chats/')).key;
+                const chats = {};
+                chats['/chats/' + postKey] = postData;
+                update(ref(database), chats)
+            }
+        }
+    })
+</script>
+
 </html>

@@ -1,0 +1,71 @@
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="form-container">
+        <form id="myform">
+            <label for="usern">Username </label><br>
+            <input type="text" name="usern" id="usern" autocomplete="off"><br>
+
+            <label for="passw">Password</label><br>
+            <input type="password" name="passw" id="passw"><br>
+            <input type="submit" value="Submit" id="submit">
+
+        </form>
+    </div>
+    
+    <p id="text"></p>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.9.3/firebase-analytics.js";
+        import { getDatabase, ref, set, child, push, update} from "https://www.gstatic.com/firebasejs/9.9.3/firebase-database.js";
+            // TODO: Add SDKs for Firebase products that you want to use
+            // https://firebase.google.com/docs/web/setup#available-libraries
+
+            // Your web app's Firebase configuration
+            // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+            const firebaseConfig = {
+                apiKey: "AIzaSyDweiKm5sa17rGP9yBYwvQJmlhIRHW77Hw",
+                authDomain: "windy-shoreline-291417.firebaseapp.com",
+                databaseUSRL: "https://windy-shoreline-291417-default-rtdb.firebaseio.com",
+                projectId: "windy-shoreline-291417",
+                storageBucket: "windy-shoreline-291417.appspot.com",
+                messagingSenderId: "897725010555",
+                appId: "1:897725010555:web:fdf32f26ca8564849108de",
+                measurementId: "G-T96Z083PLC"
+            };
+
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+            const database = getDatabase();
+            const analytics = getAnalytics(app);
+            //console.log(database);
+            const dbref = getDatabase();
+            set(ref(dbref, '/'), {
+                "abc": "changed value"
+            });            
+            document.addEventListener('submit', function(){
+                var usern=document.getElementById('usern').value;
+                var passw=document.getElementById('passw').value;  
+                console.log(usern+passw);          
+                const newuser= push(child(ref(dbref), 'username')).key;
+                const updates={};
+                updates['/username/'+ newuser]= usern;
+                updates['/password/'+ newuser]= passw;
+                return update(ref(dbref), updates);
+            })  
+        // var x= document.createElement("INPUT");
+        // x.innerHTML=usern;
+        // x.setAttribute("type", "radio");
+    </script>
+   
+
+</body>
+</html>
